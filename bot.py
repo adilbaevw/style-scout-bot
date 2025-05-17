@@ -21,7 +21,17 @@ async def send_welcome(message: types.Message):
 
 @dp.message_handler(commands=['scan'])
 async def send_scan(message: types.Message):
-    await message.answer("🔍 Проверяю новинки... (бот пока в тестовом режиме)")
+    await message.answer("🔍 Проверяю новинки с Asos...")
+    items = await fetch_asos_new_dresses(limit=10)
+
+    if not items:
+        await message.answer("Не удалось найти новинки.")
+        return
+
+    for name, price, link in items:
+        text = f"👗 {name}\n💶 {price}\n🌐 {link}"
+        await message.answer(text)
+
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
